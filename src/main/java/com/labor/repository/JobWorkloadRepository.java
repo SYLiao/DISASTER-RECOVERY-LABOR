@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.labor.model.JobWorkload;
 
-@Repository
+@Repository("jobWorkloadRepository")
 public interface JobWorkloadRepository extends JpaRepository<JobWorkload, Long>{
 
 }

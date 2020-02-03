@@ -18,8 +18,8 @@ public class TimeSheetService {
 		return (List<TimeSheet>) (timeSheetRepository.findAll());
 	}
 		
-	public void saveTimeSheet(TimeSheet timeSheet) {
-		timeSheetRepository.save(timeSheet);
+	public TimeSheet saveTimeSheet(TimeSheet timeSheet) {
+		return timeSheetRepository.save(timeSheet);
 	}
 	
 	public TimeSheet getTimeSheet(Long id) {
