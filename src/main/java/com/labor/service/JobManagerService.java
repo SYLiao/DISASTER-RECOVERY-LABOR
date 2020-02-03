@@ -14,8 +14,8 @@ public class JobManagerService {
 	@Autowired
 	private JobManagerRepository jobManagerRepository;
 	
-	public void createJobManager(JobManager jobManager) {
-		jobManagerRepository.save(jobManager);
+	public JobManager createJobManager(JobManager jobManager) {
+		return jobManagerRepository.save(jobManager);
 	}
 	
 	public JobManager findById(long jobId) {
@@ -37,11 +37,12 @@ public class JobManagerService {
 		return null;
 	}
 	
-	public void update(JobManager jobManager) {
+	public JobManager update(JobManager jobManager) {
 		JobManager job = jobManagerRepository.findById(jobManager.getJobId()).orElse(null);
 		if(job != null) {
 			jobManagerRepository.save(jobManager);
 		}
+		return jobManager;
 	}
 	
 	public void deleteById(long id) {
