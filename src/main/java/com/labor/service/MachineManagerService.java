@@ -18,8 +18,8 @@ public class MachineManagerService {
 		return (List<MachineManager>) (machineManagerRepository.findAll());
 	}
 		
-	public void saveMachineManager(MachineManager machineManager) {
-		machineManagerRepository.save(machineManager);
+	public MachineManager saveMachineManager(MachineManager machineManager) {
+		return machineManagerRepository.save(machineManager);
 	}
 	
 	public MachineManager getMachineManager(Long id) {

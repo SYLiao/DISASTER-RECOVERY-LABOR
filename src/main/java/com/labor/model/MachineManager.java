@@ -8,16 +8,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "machinemanager")
+@Table(name = "machineManager")
 public class MachineManager {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "machinecode")
-	private String machinecode;
+	@Column(name = "machineCode")
+	private String machineCode;
 	
 	@Column(name = "description")
 	private String description;
@@ -38,11 +38,11 @@ public class MachineManager {
 	}
 
 	public String getMachinecode() {
-		return machinecode;
+		return machineCode;
 	}
 
-	public void setMachinecode(String machinecode) {
-		this.machinecode = machinecode;
+	public void setMachinecode(String machineCode) {
+		this.machineCode = machineCode;
 	}
 
 	public String getDescription() {

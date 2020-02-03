@@ -1,24 +1,31 @@
 
 package com.labor.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "jobManager")
 public class JobManager {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long JobId;
 	
+	@Column(name = "jobCode")
 	private String jobCode;
 	
+	@Column(name = "jobDescription")
 	private String jobDescription;
 	
+	@Column(name = "rateHourly")
 	private String rateHourly;
 	
+	@Column(name = "maxHour")
 	private double maxHour;
 
 	public long getJobId() {

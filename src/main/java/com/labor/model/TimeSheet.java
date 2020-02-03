@@ -13,22 +13,22 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "timesheet")
+@Table(name = "timeSheet")
 public class TimeSheet {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "sitecode")
-	private String sitecode;
+	@Column(name = "siteCode")
+	private String siteCode;
 	
 	@Column(name = "date")
 	private Date date;
 	
-	@Column(name = "totalamount")
-	private double totalamount;
+	@Column(name = "totalAmount")
+	private double totalAmount;
 	
 	@Column(name = "status")
 	private String status;
@@ -38,12 +38,12 @@ public class TimeSheet {
 	private User user;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "jobworkload_id")
-	private JobWorkload jobworkload;
+	@JoinColumn(name = "jobWorkload_id")
+	private JobWorkload jobWorkload;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "machineworkload_id")
-	private MachineWorkload machineworkload;
+	@JoinColumn(name = "machineWorkload_id")
+	private MachineWorkload machineWorkload;
 
 	public Long getId() {
 		return id;
@@ -54,11 +54,11 @@ public class TimeSheet {
 	}
 
 	public String getSitecode() {
-		return sitecode;
+		return siteCode;
 	}
 
-	public void setSitecode(String sitecode) {
-		this.sitecode = sitecode;
+	public void setSitecode(String siteCode) {
+		this.siteCode = siteCode;
 	}
 
 	public Date getDate() {
@@ -70,11 +70,11 @@ public class TimeSheet {
 	}
 
 	public double getTotalamount() {
-		return totalamount;
+		return totalAmount;
 	}
 
-	public void setTotalamount(double totalamount) {
-		this.totalamount = totalamount;
+	public void setTotalamount(double totalAmount) {
+		this.totalAmount = totalAmount;
 	}
 
 	public String getStatus() {
@@ -94,19 +94,19 @@ public class TimeSheet {
 	}
 
 	public JobWorkload getJobworkload() {
-		return jobworkload;
+		return jobWorkload;
 	}
 
-	public void setJobworkload(JobWorkload jobworkload) {
-		this.jobworkload = jobworkload;
+	public void setJobworkload(JobWorkload jobWorkload) {
+		this.jobWorkload = jobWorkload;
 	}
 
 	public MachineWorkload getMachineworkload() {
-		return machineworkload;
+		return machineWorkload;
 	}
 
-	public void setMachineworkload(MachineWorkload machineworkload) {
-		this.machineworkload = machineworkload;
+	public void setMachineworkload(MachineWorkload machineWorkload) {
+		this.machineWorkload = machineWorkload;
 	}
 	
 	

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.labor.model.JobWorkload;
 import com.labor.repository.JobWorkloadRepository;
 
-@Service
+@Service("jobWorkloadService")
 public class JobWorkloadService {
 	
 	@Autowired

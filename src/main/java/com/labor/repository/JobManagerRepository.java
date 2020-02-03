@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.labor.model.JobManager;
 
-@Repository
+@Repository("jobManagerRepository")
 public interface JobManagerRepository extends JpaRepository<JobManager, Long>{
 
 }
