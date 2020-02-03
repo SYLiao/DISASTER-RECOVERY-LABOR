@@ -23,7 +23,7 @@ public class JobManager {
 	private String jobDescription;
 	
 	@Column(name = "rateHourly")
-	private String rateHourly;
+	private double rateHourly;
 	
 	@Column(name = "maxHour")
 	private double maxHour;
@@ -52,11 +52,11 @@ public class JobManager {
 		this.jobDescription = jobDescription;
 	}
 
-	public String getRateHourly() {
+	public double getRateHourly() {
 		return rateHourly;
 	}
 
-	public void setRateHourly(String rateHourly) {
+	public void setRateHourly(double rateHourly) {
 		this.rateHourly = rateHourly;
 	}
 
