@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.labor.model.JobManager;
@@ -256,5 +257,21 @@ public class MainController {
 		
 		jobWorkloadService.updateJobWorkload(jobWorkload);
 		return "Job workload record for id=" +id+"updated.";
+	}
+	
+	@GetMapping("/")
+	public String home() {
+		System.out.println("----------------------------------");
+		return "home!";
+	}
+	
+	@GetMapping("/hello")
+	public String Hello() {
+		return "hello jwt !";
+	}
+	
+	@GetMapping("/admin")
+	public String admin() {
+		return "hello admin !";
 	}
 }
