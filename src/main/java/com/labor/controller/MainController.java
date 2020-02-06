@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.labor.model.JobManager;
@@ -51,6 +53,14 @@ public class MainController {
 	@Autowired
 	private JobWorkloadService jobWorkloadService;
 	
+	private User user;
+	
+	private void getUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = authentication.getPrincipal();
+		this.user = (User) principal;
+	}
+	
 	//Get list
 	
 	@CrossOrigin("http://localhost:3000")
@@ -61,6 +71,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/machineManager")
+	@PreAuthorize("hasAuthority('admin')")
 	public List<MachineManager> displayMachineManager(){
 		return machineManagerService.listMachineManager();
 	}
@@ -73,12 +84,22 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/timeSheet")
+	@PreAuthorize("hasAuthority('admin')")
 	public List<TimeSheet> displayTimeSheet(){
 		return timeSheetService.listTimeSheet();
 	}
 	
 	@CrossOrigin("http://localhost:3000")
+	@GetMapping("/userTimeSheet")
+	@PreAuthorize("hasAuthority('contractor')")
+	public List<TimeSheet> displayUserTimeSheet(){
+		getUser();
+		return user.getTimeSheets();
+	}
+	
+	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/jobManager")
+	@PreAuthorize("hasAuthority('admin')")
 	public List<JobManager> jobManagerDisplay(){
 		return jobManagerService.findAll();
 	}
@@ -100,6 +121,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PostMapping("/newMachineManager")
+	@PreAuthorize("hasAuthority('admin')")
 	public ResponseEntity<Object> createMachineManager(@RequestBody MachineManager machineManager) {
 		machineManagerService.saveMachineManager(machineManager);
 		return new  ResponseEntity<Object>("MachineManager created successfully.",HttpStatus.OK);
@@ -107,6 +129,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PostMapping("/newMachineWorkload")
+	@PreAuthorize("hasAuthority('contractor')")
 	public ResponseEntity<Object> createMachineWorkload(@RequestBody MachineWorkload machineWorkload) {
 		machineWorkloadService.createMachineWorkload(machineWorkload);
 		return new  ResponseEntity<Object>("MachineWorkload created successfully.",HttpStatus.OK);
@@ -114,6 +137,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PostMapping("/newTimeSheet")
+	@PreAuthorize("hasAuthority('contractor')")
 	public ResponseEntity<Object> createTimeSheet(@RequestBody TimeSheet timeSheet) {
 		timeSheetService.saveTimeSheet(timeSheet);
 		return new  ResponseEntity<Object>("TimeSheet created successfully.",HttpStatus.OK);
@@ -121,6 +145,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PostMapping("/newJobManager")
+	@PreAuthorize("hasAuthority('admin')")
 	public ResponseEntity<Object> jobManagerCreate(@RequestBody JobManager jobManager){
 		jobManagerService.createJobManager(jobManager);
 		return new  ResponseEntity<Object>("Job manager created successfully.",HttpStatus.OK);
@@ -128,6 +153,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PostMapping("/newJobWorkload")
+	@PreAuthorize("hasAuthority('contractor')")
 	public ResponseEntity<Object> jobWorkloadCreate(@RequestBody JobWorkload jobWorkload){
 		jobWorkloadService.createJobWorkload(jobWorkload);
 		return new  ResponseEntity<Object>("Job workload created successfully.",HttpStatus.OK);
@@ -137,30 +163,32 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/users/{id}")
-	public User getUserById(@PathVariable Long id) {
+	public User getUserById(@PathVariable long id) {
 		return userService.getUser(id);
 	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/machineManager/{id}")
-	public MachineManager getMachineManagerById(@PathVariable Long id) {
+	@PreAuthorize("hasAuthority('admin')")
+	public MachineManager getMachineManagerById(@PathVariable long id) {
 		return machineManagerService.getMachineManager(id);
 	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/machineWorkload/{id}")
-	public MachineWorkload getMachineWorkloadById(@PathVariable Long id) {
+	public MachineWorkload getMachineWorkloadById(@PathVariable long id) {
 		return machineWorkloadService.findById(id);
 	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/timeSheet/{id}")
-	public TimeSheet getTimeSheetById(@PathVariable Long id) {
+	public TimeSheet getTimeSheetById(@PathVariable long id) {
 		return timeSheetService.getTimeSheet(id);
 	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/getJobManager/{id}")
+	@PreAuthorize("hasAuthority('admin')")
 	public JobManager getJobManager(@PathVariable long id) {
 		return jobManagerService.findById(id);
 	}
@@ -175,30 +203,33 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@DeleteMapping("/users/{id}")
-	public void deleteUser(@PathVariable Long id) {
+	public void deleteUser(@PathVariable long id) {
 		userService.deleteUser(id);
 	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@DeleteMapping("/machineManager/{id}")
-	public void deleteMachineManager(@PathVariable Long id) {
+	@PreAuthorize("hasAuthority('admin')")
+	public void deleteMachineManager(@PathVariable long id) {
 		machineManagerService.deleteMachineManager(id);
 	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@DeleteMapping("/machineWorkload/{id}")
-	public void deleteMachineWorkloadr(@PathVariable Long id) {
+	public void deleteMachineWorkloadr(@PathVariable long id) {
 		machineWorkloadService.deleteById(id);
 	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@DeleteMapping("/timeSheet/{id}")
-	public void deleteTimeSheet(@PathVariable Long id) {
+	@PreAuthorize("hasAuthority('admin')")
+	public void deleteTimeSheet(@PathVariable long id) {
 		timeSheetService.deleteTimeSheet(id);
 	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@DeleteMapping("/deleteJobManager/{id}")
+	@PreAuthorize("hasAuthority('admin')")
 	public void deleteJobManager(@PathVariable long id) {
 		jobManagerService.deleteById(id);
 	}
@@ -213,7 +244,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PutMapping("/users/update/{id}")
-	public String updateUser(@RequestBody User user, @PathVariable Long id) {
+	public String updateUser(@RequestBody User user, @PathVariable long id) {
 	
 		userService.saveUser(user);
 		return "User record for id=" +id+"updated.";
@@ -221,7 +252,8 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PutMapping("/machineManager/update/{id}")
-	public String updateMachineManager(@RequestBody MachineManager machineManager, @PathVariable Long id) {
+	@PreAuthorize("hasAuthority('admin')")
+	public String updateMachineManager(@RequestBody MachineManager machineManager, @PathVariable long id) {
 
 		machineManagerService.saveMachineManager(machineManager);
 		return "Machine manager record for id=" +id+"updated.";
@@ -229,7 +261,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PutMapping("/machineWorkload/update/{id}")
-	public String updateMachineWorkload(@RequestBody MachineWorkload machineWorkload, @PathVariable Long id) {
+	public String updateMachineWorkload(@RequestBody MachineWorkload machineWorkload, @PathVariable long id) {
 
 		machineWorkloadService.createMachineWorkload(machineWorkload);
 		return "Machine workload record for id=" +id+"updated.";
@@ -237,7 +269,8 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PutMapping("/timeSheet/{id}")
-	public String updateTimeSheet(@RequestBody TimeSheet timeSheet, @PathVariable Long id) {
+	@PreAuthorize("hasAuthority('contractor')")
+	public String updateTimeSheet(@RequestBody TimeSheet timeSheet, @PathVariable long id) {
 
 		timeSheetService.saveTimeSheet(timeSheet);
 		return "Timesheet record for id=" +id+"updated.";
@@ -245,6 +278,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PutMapping("/updateJobManager/{id}")
+	@PreAuthorize("hasAuthority('admin')")
 	public String updateJobManager(@RequestBody JobManager jobManager, @PathVariable long id){
 		
 		jobManagerService.update(jobManager);
@@ -257,6 +291,15 @@ public class MainController {
 		
 		jobWorkloadService.updateJobWorkload(jobWorkload);
 		return "Job workload record for id=" +id+"updated.";
+	}
+	
+	@CrossOrigin("http://localhost:3000")
+	@PutMapping("/approvalTimesheet/{id}")
+	@PreAuthorize("hasAuthority('admin')")
+	public String approvalTimesheet(@RequestBody TimeSheet timeSheet, @PathVariable long id){
+		timeSheet.setStatus("Approval");
+		timeSheetService.saveTimeSheet(timeSheet);
+		return "Timesheet record for id=" +id+" is approvaled.";
 	}
 	
 	@GetMapping("/")

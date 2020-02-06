@@ -1,6 +1,8 @@
 package com.labor.filter;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Date;
@@ -10,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,17 +32,33 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 	
+	private AuthenticationManager authenticationManager;
+	
 	public JwtLoginFilter(String defaultFilterStringProcessUrl, AuthenticationManager authenticationManager) {
 		super(new AntPathRequestMatcher(defaultFilterStringProcessUrl));
-		setAuthenticationManager(authenticationManager);
+		this.authenticationManager = authenticationManager;
+		System.out.println("111111111111111111111");
+//		setAuthenticationManager(authenticationManager);
 	}
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException, IOException, ServletException {
-		User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
-		System.out.println(user.getUsername());
-		return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+		System.out.println("2222222222222222222");
+		BufferedReader in=new BufferedReader(new InputStreamReader(request.getInputStream()));
+		StringBuilder sb = new StringBuilder(); 
+		String xmlHead = "";
+		String xmlContent="";
+		String line = null; 
+		while ((line = in.readLine()) != null) { 
+			sb.append(line); 
+		}
+		System.out.println(sb.toString());
+
+//		User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
+		User user = new User("Liao", "123");
+		System.out.println("finished");
+		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 	}
 	
 	@Override
@@ -47,6 +66,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		throws IOException, ServletException{
 		Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
 		StringBuffer stringBuffer = new StringBuffer();
+		System.out.println("3333333333333333");
 		for(GrantedAuthority authority : authorities ) {
 			stringBuffer.append(authority.getAuthority())
 				.append(",");
@@ -62,23 +82,20 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		wr.write(new ObjectMapper().writeValueAsString(jwt));
 		wr.flush();
 		wr.close();
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Method", "*");
-		response.setHeader("Access-Control-Max-Age", "3600");
-		response.setHeader("Access-Control-Allow-Headers", "*");
-		if(request.getMethod().equals("OPTIONS")) {
-			response.setStatus(HttpServletResponse.SC_OK);
-		}
+		System.out.println(jwt);
+		System.out.println("11111111111123456789087654324567898765432");
 	}
 	
 	protected void unsuccessfulAuthentocation(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
 		throws IOException, ServletException{
+		System.out.println("44444444444444444444");
 		response.setContentType("application/json;charset=utf-8");
 
 		PrintWriter out = response.getWriter();
 		out.write("Login failed!");
 		out.flush();
 		out.close();
+		System.out.println("222222222222223456789087654324567898765432");
 	}
 
 }

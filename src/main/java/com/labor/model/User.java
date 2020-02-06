@@ -1,17 +1,21 @@
 package com.labor.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +25,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "user")
 public class User implements UserDetails{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,12 +47,25 @@ public class User implements UserDetails{
 	@Column(name = "password")
 	private String password;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
 	
 	private String username;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "user_timesheet", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "timesheet_id"))
+	private List<TimeSheet> timeSheets;
 
+	public User(String username, String password) {
+		this.username = username;
+		this.password = password;
+		this.timeSheets = new ArrayList<>();
+	}
+	
+	public User() {
+		this.timeSheets = new ArrayList<>();
+	}
 	
 	public Long getId() {
 		return id;
@@ -91,6 +113,14 @@ public class User implements UserDetails{
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+	
+	public List<TimeSheet> getTimeSheets() {
+		return timeSheets;
+	}
+
+	public void setTimeSheets(List<TimeSheet> timeSheets) {
+		this.timeSheets = timeSheets;
 	}
 
 	@Override
