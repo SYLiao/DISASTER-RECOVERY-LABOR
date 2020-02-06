@@ -26,6 +26,8 @@ public class jwtOtherFilter extends GenericFilterBean{
 		// TODO Auto-generated method stub
 		HttpServletRequest req = (HttpServletRequest) request;
 		String jwToken = req.getHeader("authorization");
+		System.out.println("1234546532145432145321342");
+		System.out.println(jwToken);
 		Claims claims = Jwts.parser().setSigningKey("Liao@Labor").parseClaimsJws(jwToken.replace("Bearer", ""))
 				.getBody();
 		String username = claims.getSubject();

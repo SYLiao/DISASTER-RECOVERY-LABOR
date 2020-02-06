@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,12 +25,15 @@ public class MyUserDetailService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
 		Iterable<User> usersIterable = userRepository.findAll();
 		UserDetails userDetails = null;
+		User userInfo = null;
 		for (User user : usersIterable) {
 			if(user.getUsername().equals(username)) {
 				userDetails = user;
+				userInfo = user;
 			}
 		}
-		return userDetails;
+		Collection<? extends GrantedAuthority> authorities = userInfo.getAuthorities();
+		return new org.springframework.security.core.userdetails.User(userInfo.getUsername(), userInfo.getPassword(), authorities);
 	}
 	
 }
