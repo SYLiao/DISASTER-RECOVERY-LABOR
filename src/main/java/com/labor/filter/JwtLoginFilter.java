@@ -62,6 +62,13 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		wr.write(new ObjectMapper().writeValueAsString(jwt));
 		wr.flush();
 		wr.close();
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Method", "*");
+		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Headers", "*");
+		if(request.getMethod().equals("OPTIONS")) {
+			response.setStatus(HttpServletResponse.SC_OK);
+		}
 	}
 	
 	protected void unsuccessfulAuthentocation(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)

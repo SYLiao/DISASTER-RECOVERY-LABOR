@@ -65,7 +65,7 @@ public class MainController {
 		return machineManagerService.listMachineManager();
 	}
 	
-	@CrossOrigin("http://localhost:3000")
+	@CrossOrigin("http://localhost:3000")	
 	@GetMapping("/machineWorkload")
 	public List<MachineWorkload> displayMachineWorkload(){
 		return machineWorkloadService.findAll();
