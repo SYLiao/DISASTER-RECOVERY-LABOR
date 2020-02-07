@@ -42,14 +42,12 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 	public JwtLoginFilter(String defaultFilterStringProcessUrl, AuthenticationManager authenticationManager) {
 		super(new AntPathRequestMatcher(defaultFilterStringProcessUrl));
 		this.authenticationManager = authenticationManager;
-		System.out.println("111111111111111111111");
 //		setAuthenticationManager(authenticationManager);
 	}
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException, IOException, ServletException {
-		System.out.println("2222222222222222222");
 		BufferedReader in=new BufferedReader(new InputStreamReader(request.getInputStream()));
 		StringBuilder sb = new StringBuilder(); 
 		String xmlHead = "";
@@ -64,14 +62,12 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user2.getUsername(), user2.getPassword()));
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("44444444444444444444");
 			response.setContentType("application/json;charset=utf-8");
 
 			PrintWriter out = response.getWriter();
 			out.write("Login failed!");
 			out.flush();
 			out.close();
-			System.out.println("222222222222223456789087654324567898765432");
 			return null;
 		}
 		
@@ -82,7 +78,6 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		throws IOException, ServletException{
 		Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
 		StringBuffer stringBuffer = new StringBuffer();
-		System.out.println("3333333333333333");
 		for(GrantedAuthority authority : authorities ) {
 			stringBuffer.append(authority.getAuthority())
 				.append(",");
@@ -90,16 +85,17 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		String jwt = Jwts.builder()
 				.claim("authorities", stringBuffer)
 				.setSubject(authResult.getName())
-				.setExpiration(new Date(System.currentTimeMillis() + 60*1000*15))
+				.setExpiration(new Date(System.currentTimeMillis() + 60*1000*30))
 				.signWith(SignatureAlgorithm.HS512, "Liao@Labor")
 				.compact();
+//		String username = authResult.getName();
 		response.setContentType("application/json;charset=utf-8");
 		PrintWriter wr = response.getWriter();
 		wr.write(new ObjectMapper().writeValueAsString(jwt));
+//		wr.write(new ObjectMapper().writeValueAsString(username));
 		wr.flush();
 		wr.close();
 		System.out.println(jwt);
-		System.out.println("11111111111123456789087654324567898765432");
 	}
 	
 //	protected void unsuccessfulAuthentocation(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
