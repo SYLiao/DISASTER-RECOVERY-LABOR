@@ -4,8 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -19,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.AntPathMatcher;
@@ -53,12 +58,23 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		while ((line = in.readLine()) != null) { 
 			sb.append(line); 
 		}
-		System.out.println(sb.toString());
+		ArrayList<String> userList = getStr(sb.toString());
+		User user2 = new User(userList.get(1), userList.get(3));
+		try {
+			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user2.getUsername(), user2.getPassword()));
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("44444444444444444444");
+			response.setContentType("application/json;charset=utf-8");
 
-//		User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
-		User user = new User("Liao", "123");
-		System.out.println("finished");
-		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+			PrintWriter out = response.getWriter();
+			out.write("Login failed!");
+			out.flush();
+			out.close();
+			System.out.println("222222222222223456789087654324567898765432");
+			return null;
+		}
+		
 	}
 	
 	@Override
@@ -86,16 +102,30 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		System.out.println("11111111111123456789087654324567898765432");
 	}
 	
-	protected void unsuccessfulAuthentocation(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
-		throws IOException, ServletException{
-		System.out.println("44444444444444444444");
-		response.setContentType("application/json;charset=utf-8");
-
-		PrintWriter out = response.getWriter();
-		out.write("Login failed!");
-		out.flush();
-		out.close();
-		System.out.println("222222222222223456789087654324567898765432");
+//	protected void unsuccessfulAuthentocation(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+//		throws IOException, ServletException{
+//		System.out.println("44444444444444444444");
+//		response.setContentType("application/json;charset=utf-8");
+//
+//		PrintWriter out = response.getWriter();
+//		out.write("Login failed!");
+//		out.flush();
+//		out.close();
+//		System.out.println("222222222222223456789087654324567898765432");
+//	}
+	
+	public ArrayList<String> getStr(String str) {
+		 
+		Pattern p1=Pattern.compile("\"(.*?)\"");
+		 
+		Matcher m = p1.matcher(str);
+		 
+		ArrayList<String> list = new ArrayList<String>();
+		while (m.find()) {
+			list.add(m.group().trim().replace("\"",""));
+		}
+		return list;
+		        
 	}
 
 }

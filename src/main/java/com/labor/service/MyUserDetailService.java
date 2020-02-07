@@ -32,6 +32,10 @@ public class MyUserDetailService implements UserDetailsService{
 				userInfo = user;
 			}
 		}
+		if(userInfo == null) {
+			return null;
+//			throw new UsernameNotFoundException("Not Found");
+		}
 		Collection<? extends GrantedAuthority> authorities = userInfo.getAuthorities();
 		return new org.springframework.security.core.userdetails.User(userInfo.getUsername(), userInfo.getPassword(), authorities);
 	}
