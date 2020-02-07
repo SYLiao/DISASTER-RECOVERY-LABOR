@@ -74,7 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.and()
 //			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.addFilterBefore(new JwtLoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
-//			.addFilterBefore(new jwtOtherFilter(), UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(new jwtOtherFilter(), UsernamePasswordAuthenticationFilter.class)
 //			.formLogin()
 //			.loginPage("/login")
 //			.loginProcessingUrl("/login-process")

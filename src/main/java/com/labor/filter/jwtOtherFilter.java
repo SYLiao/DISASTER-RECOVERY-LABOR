@@ -1,6 +1,8 @@
 package com.labor.filter;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import javax.servlet.FilterChain;
@@ -26,8 +28,6 @@ public class jwtOtherFilter extends GenericFilterBean{
 		// TODO Auto-generated method stub
 		HttpServletRequest req = (HttpServletRequest) request;
 		String jwToken = req.getHeader("authorization");
-		System.out.println("1234546532145432145321342");
-		System.out.println(jwToken);
 		Claims claims = Jwts.parser().setSigningKey("Liao@Labor").parseClaimsJws(jwToken.replace("Bearer", ""))
 				.getBody();
 		String username = claims.getSubject();
