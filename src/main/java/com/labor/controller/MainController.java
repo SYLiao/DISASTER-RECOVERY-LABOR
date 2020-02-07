@@ -63,6 +63,12 @@ public class MainController {
 	
 	//Get list
 	
+//	@CrossOrigin("http://localhost:3000")
+//	@GetMapping("/login")
+//	public List<User> displayUsers() {
+//		return userService.listUser();
+//	}
+	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/users")
 	public List<User> displayUsers() {
