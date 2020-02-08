@@ -1,6 +1,11 @@
 package com.labor.controller;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.labor.model.JobManager;
 import com.labor.model.JobWorkload;
 import com.labor.model.MachineManager;
@@ -55,10 +62,8 @@ public class MainController {
 	
 	private User user;
 	
-	private void getUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Object principal = authentication.getPrincipal();
-		this.user = (User) principal;
+	public void getUser(String username) {
+		this.user =  userService.findUserByUsername(username);
 	}
 	
 	//Get list
@@ -66,7 +71,7 @@ public class MainController {
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/getUser")
 	public User getUsers() {
-		getUser();
+//		getUser();
 		return this.user;
 	}
 	
@@ -100,7 +105,7 @@ public class MainController {
 	@GetMapping("/userTimeSheet")
 	@PreAuthorize("hasAuthority('contractor')")
 	public List<TimeSheet> displayUserTimeSheet(){
-		getUser();
+//		getUser(username);
 		return user.getTimeSheets();
 	}
 	
@@ -109,6 +114,19 @@ public class MainController {
 	@PreAuthorize("hasAuthority('admin')")
 	public List<JobManager> jobManagerDisplay(){
 		return jobManagerService.findAll();
+	}
+	
+	@CrossOrigin("http://localhost:3000")
+	@GetMapping("/jobManagerCode")
+	@PreAuthorize("hasAuthority('admin')")
+	public List<String> jobManagerCode(){
+		List<JobManager> list = jobManagerService.findAll();
+		List<String> resultList = new ArrayList<String>();
+		for(JobManager jobManager : list) {
+			resultList.add(jobManager.getJobCode());
+		}
+		System.out.println(resultList);
+		return resultList;
 	}
 	
 	@CrossOrigin("http://localhost:3000")
@@ -142,13 +160,75 @@ public class MainController {
 		return new  ResponseEntity<Object>("MachineWorkload created successfully.",HttpStatus.OK);
 	}	
 	
+	
+	
+	
+	
+	
 	@CrossOrigin("http://localhost:3000")
-	@PostMapping("/newTimeSheet")
-	@PreAuthorize("hasAuthority('contractor')")
-	public ResponseEntity<Object> createTimeSheet(@RequestBody TimeSheet timeSheet) {
+	@RequestMapping(value = "/newTimeSheet", method = RequestMethod.POST , produces = "application/json")
+	@PreAuthorize("hasAuthority('admin')")
+	public void createTimeSheet(@RequestBody JSONObject jsonParam) {
+		User user = userService.findUserByUsername(jsonParam.getString("username"));
+		System.out.println(jsonParam.getString("username"));
+		double Hours = 0;
+		double amount = 0;
+		JobManager job1 = jobManagerService.findByCode(jsonParam.getString("jobCode1"));
+		JobManager job2 = jobManagerService.findByCode(jsonParam.getString("jobCode2"));
+		JobManager job3 = jobManagerService.findByCode(jsonParam.getString("jobCode3"));
+		MachineManager machine1 = machineManagerService.findByCode(jsonParam.getString("machineCode1"));
+		MachineManager machine2 = machineManagerService.findByCode(jsonParam.getString("machineCode2"));
+		MachineManager machine3 = machineManagerService.findByCode(jsonParam.getString("machineCode3"));
+		if(job1 != null && isNumeric(jsonParam.getString("jobHour1"))) {
+			double jobhour1 = Double.parseDouble(jsonParam.getString("jobHour1"));
+			double jobAmount1 = jobhour1 * job1.getRateHourly();
+			Hours += jobhour1;
+			amount += jobAmount1;
+		}
+		if(job2 != null && isNumeric(jsonParam.getString("jobHour2"))) {
+			double jobhour2 = Double.parseDouble(jsonParam.getString("jobHour2"));
+			double jobAmount2 = jobhour2 * job2.getRateHourly();
+			Hours += jobhour2;
+			amount += jobAmount2;
+		}
+		if(job3 != null && isNumeric(jsonParam.getString("jobHour3"))) {
+			double jobhour3 = Double.parseDouble(jsonParam.getString("jobHour3"));
+			double jobAmount3 = jobhour3 * job3.getRateHourly();
+			Hours += jobhour3;
+			amount += jobAmount3;
+		}
+		if(machine1 != null && isNumeric(jsonParam.getString("machineHour1"))) {
+			double machinehour1 = Double.parseDouble(jsonParam.getString("machineHour1"));
+			double machineAmount1 = machinehour1 * machine1.getRate();
+			Hours += machinehour1;
+			amount += machineAmount1;
+		}
+		if(machine2 != null && isNumeric(jsonParam.getString("machineHour2"))) {
+			double machinehour2 = Double.parseDouble(jsonParam.getString("machineHour2"));
+			double machineAmount2 = machinehour2 * machine2.getRate();
+			Hours += machinehour2;
+			amount += machineAmount2;
+		}
+		if(machine3 != null && isNumeric(jsonParam.getString("machineHour3"))) {
+			double machinehour3 = Double.parseDouble(jsonParam.getString("machineHour3"));
+			double machineAmount3 = machinehour3 * machine3.getRate();
+			Hours += machinehour3;
+			amount += machineAmount3;
+		}
+		TimeSheet timeSheet = new TimeSheet(jsonParam.getString("date"), jsonParam.getString("siteCode"),
+				Hours, amount, user.getUsername(), user);
 		timeSheetService.saveTimeSheet(timeSheet);
-		return new  ResponseEntity<Object>("TimeSheet created successfully.",HttpStatus.OK);
 	}	
+	
+    public boolean isNumeric(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+	
 	
 	@CrossOrigin("http://localhost:3000")
 	@PostMapping("/newJobManager")
