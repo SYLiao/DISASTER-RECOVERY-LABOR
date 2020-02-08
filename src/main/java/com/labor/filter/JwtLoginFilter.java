@@ -60,6 +60,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		}
 		ArrayList<String> userList = getStr(sb.toString());
 		User user2 = new User(userList.get(1), userList.get(3));
+		System.out.println(user2.getUsername());
 		try {
 			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user2.getUsername(), user2.getPassword()));
 		} catch (Exception e) {
@@ -90,7 +91,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		String jwt = Jwts.builder()
 				.claim("authorities", stringBuffer)
 				.setSubject(authResult.getName())
-				.setExpiration(new Date(System.currentTimeMillis() + 60*1000*15))
+				.setExpiration(new Date(System.currentTimeMillis() + 60*1000*60))
 				.signWith(SignatureAlgorithm.HS512, "Liao@Labor")
 				.compact();
 		response.setContentType("application/json;charset=utf-8");
