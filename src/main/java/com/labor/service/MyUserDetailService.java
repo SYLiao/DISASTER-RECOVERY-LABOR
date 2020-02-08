@@ -26,12 +26,16 @@ public class MyUserDetailService implements UserDetailsService{
 		Iterable<User> usersIterable = userRepository.findAll();
 		UserDetails userDetails = null;
 		User userInfo = null;
+		System.out.println("username:"+username);
 		for (User user : usersIterable) {
+			System.out.println(user.getUsername());
 			if(user.getUsername().equals(username)) {
+				System.out.println("check");
 				userDetails = user;
 				userInfo = user;
 			}
 		}
+		
 		if(userInfo == null) {
 			return null;
 //			throw new UsernameNotFoundException("Not Found");

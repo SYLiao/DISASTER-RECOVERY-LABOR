@@ -58,7 +58,7 @@ public class User implements UserDetails{
 	private List<TimeSheet> timeSheets;
 
 	public User(String username, String password) {
-		this.username = username;
+		this.email = username;
 		this.password = password;
 		this.timeSheets = new ArrayList<>();
 	}
