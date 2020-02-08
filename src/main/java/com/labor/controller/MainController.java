@@ -63,11 +63,12 @@ public class MainController {
 	
 	//Get list
 	
-//	@CrossOrigin("http://localhost:3000")
-//	@GetMapping("/login")
-//	public List<User> displayUsers() {
-//		return userService.listUser();
-//	}
+	@CrossOrigin("http://localhost:3000")
+	@GetMapping("/getUser")
+	public User getUsers() {
+		getUser();
+		return this.user;
+	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/users")
@@ -214,7 +215,7 @@ public class MainController {
 	}
 	
 	@CrossOrigin("http://localhost:3000")
-	@DeleteMapping("/machineManager/{id}")
+	@DeleteMapping("/deleteMachineManager/{id}")
 	@PreAuthorize("hasAuthority('admin')")
 	public void deleteMachineManager(@PathVariable long id) {
 		machineManagerService.deleteMachineManager(id);
@@ -237,6 +238,7 @@ public class MainController {
 	@DeleteMapping("/deleteJobManager/{id}")
 	@PreAuthorize("hasAuthority('admin')")
 	public void deleteJobManager(@PathVariable long id) {
+		System.out.println("delete");
 		jobManagerService.deleteById(id);
 	}
 	
@@ -300,9 +302,11 @@ public class MainController {
 	}
 	
 	@CrossOrigin("http://localhost:3000")
-	@PutMapping("/approvalTimesheet/{id}")
+	@PostMapping("/approvalTimesheet/{id}")
 	@PreAuthorize("hasAuthority('admin')")
-	public String approvalTimesheet(@RequestBody TimeSheet timeSheet, @PathVariable long id){
+	public String approvalTimesheet(@PathVariable long id){
+		TimeSheet timeSheet = timeSheetService.getTimeSheet(id);
+		System.out.println(timeSheet.getSiteCode());
 		timeSheet.setStatus("Approval");
 		timeSheetService.saveTimeSheet(timeSheet);
 		return "Timesheet record for id=" +id+" is approvaled.";

@@ -13,7 +13,6 @@ public class MachineManager {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Long id;
 	
 	@Column(name = "machineCode")
@@ -37,11 +36,11 @@ public class MachineManager {
 		this.id = id;
 	}
 
-	public String getMachinecode() {
+	public String getMachineCode() {
 		return machineCode;
 	}
 
-	public void setMachinecode(String machineCode) {
+	public void setMachineCode(String machineCode) {
 		this.machineCode = machineCode;
 	}
 
