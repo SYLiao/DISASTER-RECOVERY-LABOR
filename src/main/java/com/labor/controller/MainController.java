@@ -83,7 +83,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/machineManager")
-	@PreAuthorize("hasAuthority('admin')")
+//	@PreAuthorize("hasAuthority('admin')")
 	public List<MachineManager> displayMachineManager(){
 		return machineManagerService.listMachineManager();
 	}
@@ -96,14 +96,14 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/timeSheet")
-	@PreAuthorize("hasAuthority('admin')")
+	@PreAuthorize("hasAuthority('contractor')")
 	public List<TimeSheet> displayTimeSheet(){
 		return timeSheetService.listTimeSheet();
 	}
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping(value="/userTimeSheet")
-	@PreAuthorize("hasAuthority('admin')")
+//	@PreAuthorize("hasAuthority('admin')")
 	public List<TimeSheet> displayUserTimeSheet(){
 		getUsers();
 		return user.getTimeSheets();
@@ -111,7 +111,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/jobManager")
-	@PreAuthorize("hasAuthority('admin')")
+//	@PreAuthorize("hasAuthority('admin')")
 	public List<JobManager> jobManagerDisplay(){
 		return jobManagerService.findAll();
 	}
@@ -163,7 +163,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/newTimeSheet", method = RequestMethod.POST , produces = "application/json")
-	@PreAuthorize("hasAuthority('admin')")
+	@PreAuthorize("hasAuthority('contractor')")
 	public void createTimeSheet(@RequestBody JSONObject jsonParam) {
 		getUsers();
 		System.out.println(jsonParam.getString("username"));
