@@ -32,7 +32,7 @@ public class jwtOtherFilter extends GenericFilterBean{
 				.getBody();
 		String username = claims.getSubject();
 		List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, null, authorities);
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, "123", authorities);
 		SecurityContextHolder.getContext().setAuthentication(token);
 		chain.doFilter(req, response);
 	}

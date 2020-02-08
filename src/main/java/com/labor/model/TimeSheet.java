@@ -58,13 +58,12 @@ public class TimeSheet {
 		this.status = "submitted";
 	}
 
-	public TimeSheet(String date, String sitecode, double Hours, double amount, String username, User user) {
+	public TimeSheet(String date, String sitecode, double Hours, double amount, String username) {
 		this.creatDate = date;
 		this.siteCode = sitecode;
 		this.hours = Hours;
 		this.totalAmount = amount;
 		this.user_name = username;
-		this.user = user;
 		this.status = "submitted";
 	}
 

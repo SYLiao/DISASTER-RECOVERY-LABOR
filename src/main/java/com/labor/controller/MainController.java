@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -62,17 +63,16 @@ public class MainController {
 	
 	private User user;
 	
-	public void getUser(String username) {
-		this.user =  userService.findUserByUsername(username);
+	public User getUser(String username) {
+		return userService.findUserByUsername(username);
 	}
 	
 	//Get list
-	
-	@CrossOrigin("http://localhost:3000")
-	@GetMapping("/getUser")
-	public User getUsers() {
-//		getUser();
-		return this.user;
+	public void getUsers() {
+		UsernamePasswordAuthenticationToken u = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+		String username = u.getName();
+		User user1 = getUser(username);
+		this.user = user1;
 	}
 	
 	@CrossOrigin("http://localhost:3000")
@@ -102,10 +102,10 @@ public class MainController {
 	}
 	
 	@CrossOrigin("http://localhost:3000")
-	@GetMapping("/userTimeSheet")
-	@PreAuthorize("hasAuthority('contractor')")
+	@GetMapping(value="/userTimeSheet")
+	@PreAuthorize("hasAuthority('admin')")
 	public List<TimeSheet> displayUserTimeSheet(){
-//		getUser(username);
+		getUsers();
 		return user.getTimeSheets();
 	}
 	
@@ -161,15 +161,11 @@ public class MainController {
 	}	
 	
 	
-	
-	
-	
-	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/newTimeSheet", method = RequestMethod.POST , produces = "application/json")
 	@PreAuthorize("hasAuthority('admin')")
 	public void createTimeSheet(@RequestBody JSONObject jsonParam) {
-		User user = userService.findUserByUsername(jsonParam.getString("username"));
+		getUsers();
 		System.out.println(jsonParam.getString("username"));
 		double Hours = 0;
 		double amount = 0;
@@ -216,8 +212,12 @@ public class MainController {
 			amount += machineAmount3;
 		}
 		TimeSheet timeSheet = new TimeSheet(jsonParam.getString("date"), jsonParam.getString("siteCode"),
-				Hours, amount, user.getUsername(), user);
+				Hours, amount, user.getUsername());
 		timeSheetService.saveTimeSheet(timeSheet);
+		List<TimeSheet> timeSheets = user.getTimeSheets();
+		timeSheets.add(timeSheet);
+		user.setTimeSheets(timeSheets);
+		userService.saveUser(user);
 	}	
 	
     public boolean isNumeric(String str) {
@@ -258,6 +258,7 @@ public class MainController {
 	@GetMapping("/machineManager/{id}")
 	@PreAuthorize("hasAuthority('admin')")
 	public MachineManager getMachineManagerById(@PathVariable long id) {
+		System.out.println(id);
 		return machineManagerService.getMachineManager(id);
 	}
 	
@@ -342,7 +343,7 @@ public class MainController {
 	@PutMapping("/machineManager/update/{id}")
 	@PreAuthorize("hasAuthority('admin')")
 	public String updateMachineManager(@RequestBody MachineManager machineManager, @PathVariable long id) {
-
+		machineManager.setId(id);
 		machineManagerService.saveMachineManager(machineManager);
 		return "Machine manager record for id=" +id+"updated.";
 	}
@@ -368,7 +369,7 @@ public class MainController {
 	@PutMapping("/updateJobManager/{id}")
 	@PreAuthorize("hasAuthority('admin')")
 	public String updateJobManager(@RequestBody JobManager jobManager, @PathVariable long id){
-		
+		jobManager.setJobId(id);
 		jobManagerService.update(jobManager);
 		return "Job manager record for id=" +id+"updated.";
 	}
