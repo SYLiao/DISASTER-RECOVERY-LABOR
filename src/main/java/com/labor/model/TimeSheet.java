@@ -19,7 +19,7 @@ public class TimeSheet {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long TimeSheetId;
+	private Long timeSheetId;
 
 	@Column(name = "siteCode")
 	private String siteCode;
@@ -34,7 +34,7 @@ public class TimeSheet {
 	private String creatDate;
 
 	@Column(name = "Hours")
-	private double Hours;
+	private double hours;
 
 	@Column(name = "amount")
 	private double amount;
@@ -58,19 +58,22 @@ public class TimeSheet {
 		this.status = "submitted";
 	}
 
-	public TimeSheet(Date date, String sitecode) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		this.creatDate = format.format(date);
+	public TimeSheet(String date, String sitecode, double Hours, double amount, String username, User user) {
+		this.creatDate = date;
 		this.siteCode = sitecode;
+		this.hours = Hours;
+		this.totalAmount = amount;
+		this.user_name = username;
+		this.user = user;
 		this.status = "submitted";
 	}
 
 	public Long getTimeSheetId() {
-		return TimeSheetId;
+		return timeSheetId;
 	}
 
 	public void setTimeSheetId(Long timeSheetId) {
-		TimeSheetId = timeSheetId;
+		timeSheetId = timeSheetId;
 	}
 
 	public String getSiteCode() {
@@ -107,11 +110,11 @@ public class TimeSheet {
 	}
 
 	public double getHours() {
-		return Hours;
+		return hours;
 	}
 
 	public void setHours(double hours) {
-		Hours = hours;
+		hours = hours;
 	}
 
 	public double getAmount() {
@@ -150,7 +153,7 @@ public class TimeSheet {
 
 	public void setJobWorkload(JobWorkload jobWorkload) {
 		this.jobWorkload = jobWorkload;
-		this.Hours += this.jobWorkload.getHoursWorked();
+		this.hours += this.jobWorkload.getHoursWorked();
 		this.amount += this.jobWorkload.getJobManager().getRateHourly()*this.jobWorkload.getHoursWorked();;
 	}
 
@@ -160,7 +163,7 @@ public class TimeSheet {
 
 	public void setMachineWorkload(MachineWorkload machineWorkload) {
 		this.machineWorkload = machineWorkload;
-		this.Hours += this.machineWorkload.getHoursWorked();
+		this.hours += this.machineWorkload.getHoursWorked();
 		this.amount += this.machineWorkload.getMachineManager().getRate()*this.machineWorkload.getHoursWorked();
 	}
 

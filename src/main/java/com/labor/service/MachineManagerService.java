@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.labor.model.JobManager;
 import com.labor.model.MachineManager;
 import com.labor.repository.MachineManagerRepository;
 
@@ -24,6 +25,16 @@ public class MachineManagerService {
 	
 	public MachineManager getMachineManager(Long id) {
 		return machineManagerRepository.findById(id).get();
+	}
+	
+	public MachineManager findByCode(String machineCode) {
+		Iterable<MachineManager> iterable = machineManagerRepository.findAll();
+		for(MachineManager machineManager : iterable) {
+			if(machineManager.getMachineCode().equals(machineCode)) {
+				return machineManager;
+			}
+		}
+		return null;
 	}
 	
 	public void deleteMachineManager(Long id) {
