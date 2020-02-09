@@ -26,9 +26,7 @@ public class MyUserDetailService implements UserDetailsService{
 		Iterable<User> usersIterable = userRepository.findAll();
 		UserDetails userDetails = null;
 		User userInfo = null;
-		System.out.println("username:"+username);
 		for (User user : usersIterable) {
-			System.out.println(user.getUsername());
 			if(user.getUsername().equals(username)) {
 				userDetails = user;
 				userInfo = user;

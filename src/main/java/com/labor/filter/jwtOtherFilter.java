@@ -27,13 +27,15 @@ public class jwtOtherFilter extends GenericFilterBean{
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		HttpServletRequest req = (HttpServletRequest) request;
-		String jwToken = req.getHeader("authorization");
-		Claims claims = Jwts.parser().setSigningKey("Liao@Labor").parseClaimsJws(jwToken.replace("Bearer", ""))
-				.getBody();
-		String username = claims.getSubject();
-		List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, "123", authorities);
-		SecurityContextHolder.getContext().setAuthentication(token);
+		if(!req.getRequestURL().toString().equals("http://localhost:8080/newUser")) {
+			String jwToken = req.getHeader("authorization");
+			Claims claims = Jwts.parser().setSigningKey("Liao@Labor").parseClaimsJws(jwToken.replace("Bearer", ""))
+					.getBody();
+			String username = claims.getSubject();
+			List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
+			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, "123", authorities);
+			SecurityContextHolder.getContext().setAuthentication(token);
+		}
 		chain.doFilter(req, response);
 	}
 	
