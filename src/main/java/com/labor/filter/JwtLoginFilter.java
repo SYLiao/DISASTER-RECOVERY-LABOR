@@ -57,10 +57,8 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 			sb.append(line); 
 		}
 		ArrayList<String> userList = getStr(sb.toString());
-		User user2 = new User(userList.get(1), userList.get(3));
-		System.out.println(user2.getUsername());
 		try {
-			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user2.getUsername(), user2.getPassword()));
+			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userList.get(1), userList.get(3)));
 		} catch (Exception e) {
 			// TODO: handle exception
 			response.setContentType("application/json;charset=utf-8");

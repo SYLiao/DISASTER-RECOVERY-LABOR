@@ -3,7 +3,9 @@ package com.labor.controller;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,6 +32,7 @@ import com.labor.model.JobManager;
 import com.labor.model.JobWorkload;
 import com.labor.model.MachineManager;
 import com.labor.model.MachineWorkload;
+import com.labor.model.Role;
 import com.labor.model.TimeSheet;
 import com.labor.model.User;
 import com.labor.service.JobManagerService;
@@ -60,6 +63,9 @@ public class MainController {
 	
 	@Autowired
 	private JobWorkloadService jobWorkloadService;
+	
+	@Autowired
+	private RoleService roleService;
 	
 	private User user;
 	
@@ -139,8 +145,14 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@PostMapping("/newUser")
-	public ResponseEntity<Object> createUser(@RequestBody User user) {
-		userService.saveUser(user);		
+	public ResponseEntity<Object> createUser(@RequestBody JSONObject jsonParam) {
+		Set<Role> set = new HashSet<>();
+		if(roleService.findByName(jsonParam.getString("role")) != null) {
+			set.add(roleService.findByName(jsonParam.getString("role")));
+		}
+		User userNew = new User(jsonParam.getString("email"), jsonParam.getString("password"),
+				set, jsonParam.getString("firstname"), jsonParam.getString("lastname"));
+		userService.saveUser(userNew);		
 		return new  ResponseEntity<Object>("user created successfully.",HttpStatus.OK);
 	}	
 	

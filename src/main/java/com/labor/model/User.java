@@ -26,14 +26,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "user")
 public class User implements UserDetails{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 	
 	@Column(name = "firstname")
 	private String firstname;
@@ -57,9 +52,13 @@ public class User implements UserDetails{
 	@JoinTable(name = "user_timesheet", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "timesheet_id"))
 	private List<TimeSheet> timeSheets;
 
-	public User(String username, String password) {
+	public User(String username, String password, Set<Role> set, String fName, String lName) {
 		this.email = username;
+		this.username = username;
 		this.password = password;
+		this.roles = set;
+		this.firstname = fName;
+		this.lastname = lName;
 		this.timeSheets = new ArrayList<>();
 	}
 	
@@ -67,7 +66,7 @@ public class User implements UserDetails{
 		this.timeSheets = new ArrayList<>();
 	}
 	
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 

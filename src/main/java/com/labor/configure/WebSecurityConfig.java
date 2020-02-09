@@ -70,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.and()
 			.authorizeRequests()
 			.antMatchers(HttpMethod.POST, "/login").permitAll()
+			.antMatchers(HttpMethod.POST, "/newUser").permitAll()
 			.anyRequest().authenticated()
 			.and()
 //			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
