@@ -62,6 +62,19 @@ public class User implements UserDetails{
 		this.timeSheets = new ArrayList<>();
 	}
 	
+	
+	
+	public User(String firstname, String lastname, String email, String password, Set<Role> roles) {
+		super();
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+	}
+
+
+
 	public User() {
 		this.timeSheets = new ArrayList<>();
 	}

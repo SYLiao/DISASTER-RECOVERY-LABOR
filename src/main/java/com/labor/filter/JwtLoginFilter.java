@@ -78,8 +78,8 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
 		StringBuffer stringBuffer = new StringBuffer();
 		for(GrantedAuthority authority : authorities ) {
-			stringBuffer.append(authority.getAuthority())
-				.append(",");
+			stringBuffer.append(authority.getAuthority());
+//				.append(","); this was displayed after the admin on navbar
 		}
 		String jwt = Jwts.builder()
 				.claim("authorities", stringBuffer)
