@@ -141,7 +141,7 @@ public class MainController {
 	@PostMapping("/newUser")
 	public ResponseEntity<Object> createUser(@RequestBody User user) {
 		userService.saveUser(user);		
-		return new  ResponseEntity<Object>("user created successfully.",HttpStatus.OK);
+		return new  ResponseEntity<Object>("User created successfully.",HttpStatus.OK);
 	}	
 	
 	@CrossOrigin("http://localhost:3000")
@@ -163,7 +163,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/newTimeSheet", method = RequestMethod.POST , produces = "application/json")
-	@PreAuthorize("hasAuthority('contractor')")
+//	@PreAuthorize("hasAuthority('contractor')")
 	public void createTimeSheet(@RequestBody JSONObject jsonParam) {
 		getUsers();
 		System.out.println(jsonParam.getString("username"));
