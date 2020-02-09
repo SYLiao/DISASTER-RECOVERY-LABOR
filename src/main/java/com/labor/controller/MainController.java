@@ -102,7 +102,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@GetMapping("/timeSheet")
-	@PreAuthorize("hasAuthority('contractor')")
+//	@PreAuthorize("hasAuthority('contractor')")
 	public List<TimeSheet> displayTimeSheet(){
 		return timeSheetService.listTimeSheet();
 	}

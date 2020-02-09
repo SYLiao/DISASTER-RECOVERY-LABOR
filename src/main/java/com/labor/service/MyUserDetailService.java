@@ -30,7 +30,6 @@ public class MyUserDetailService implements UserDetailsService{
 		for (User user : usersIterable) {
 			System.out.println(user.getUsername());
 			if(user.getUsername().equals(username)) {
-				System.out.println("check");
 				userDetails = user;
 				userInfo = user;
 			}
@@ -41,6 +40,7 @@ public class MyUserDetailService implements UserDetailsService{
 //			throw new UsernameNotFoundException("Not Found");
 		}
 		Collection<? extends GrantedAuthority> authorities = userInfo.getAuthorities();
+		System.out.println(authorities);
 		return new org.springframework.security.core.userdetails.User(userInfo.getUsername(), userInfo.getPassword(), authorities);
 	}
 	
